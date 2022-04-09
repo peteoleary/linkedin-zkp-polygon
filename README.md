@@ -1,5 +1,9 @@
 This is a starter template for [Learn Next.js](https://nextjs.org/learn).
 
+Credits:
+
+https://github.com/0xPARC/circom-starter
+
 # Steps to create
 
 `

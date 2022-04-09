@@ -3,7 +3,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "circom:dev": "hardhat circom --deterministic --debug --verbose",
+    "circom:prod": "hardhat circom --verbose"
   },
   "dependencies": {
     "next": "latest",
@@ -14,5 +16,8 @@
     "circomlib": "^2.0.3",
     "hardhat": "^2.9.3",
     "hardhat-circom": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=16"
   }
 }
