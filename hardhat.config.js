@@ -9,7 +9,9 @@ module.exports = {
     inputBasePath: "./circuits",
     ptau: "pot15_final.ptau",
     circuits: [
-      
+      {
+        "name": "poker"
+      }
     ],
   },
 };

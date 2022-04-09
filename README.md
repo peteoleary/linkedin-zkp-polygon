@@ -3,6 +3,7 @@ This is a starter template for [Learn Next.js](https://nextjs.org/learn).
 Credits:
 
 https://github.com/0xPARC/circom-starter
+https://medium.com/coinmonks/zk-poker-a-simple-zk-snark-circuit-8ec8d0c5ee52
 
 # Steps to create
 
