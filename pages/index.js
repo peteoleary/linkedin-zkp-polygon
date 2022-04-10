@@ -1,50 +1,47 @@
 import Head from 'next/head'
 
+import { snarkjs } from 'snarkjs'
+
 export default function Home() {
+
+
+  const doProof = async () => {
+    // const pokerWASM = await import("../circuits/poker.wasm")
+    // const pokerZKEY = await import("../circuits/poker.zkey")
+    const { proof, publicSignals } = await snarkjs.groth16.fullProve({"cards": [8, 7, 9, 10, 13], "isFold": 1, "isSee": 0, "raise": 0 }, "../circuits/poker.wasm", "../circuits/poker.zkey");
+  }
+
   return (
     <div className="container">
       <Head>
-        <title>Create Next App</title>
+        <title>React Zero Knowledge Proofs</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main>
         <h1 className="title">
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          Welcome to Zero Knowledge Proofs
         </h1>
 
         <p className="description">
-          Get started by editing <code>pages/index.js</code>
+          Lots of demonstrations of <code>hardhat-circom</code>
         </p>
 
         <div className="grid">
-          <a href="https://nextjs.org/docs" className="card">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className="card">
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className="card"
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="card"
-          >
-            <h3>Deploy &rarr;</h3>
+          <div className="card">
+            <h3>Verify Poker Hand via WASM</h3>
             <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
+              Put a button here which calls WASM.
+              <button onClick={doProof}>Click here to try proof</button>
             </p>
-          </a>
+          </div>
+
+          <div className="card">
+            <h3>Verify Poker Hand via Web3</h3>
+            <p>Put a button here which calls Web3</p>
+          </div>
+
+          
         </div>
       </main>
 
