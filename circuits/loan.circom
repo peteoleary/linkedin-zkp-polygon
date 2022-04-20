@@ -4,17 +4,17 @@ include "../node_modules/circomlib/circuits/comparators.circom";
 
 template Loan() {
     signal input income;
-    signal input guard;
+    signal input nonce;
     
     signal output incomeOk;
-    signal output guardOk;
+    signal output nonceOk;
 
     component isEq = IsEqual();
 
-    isEq.in[0] <-- guard;
+    isEq.in[0] <-- nonce;
     isEq.in[1] <-- 0x1234567890abcdef;
 
-    guardOk <== isEq.out;
+    nonceOk <== isEq.out;
 
     component gt32 = GreaterThan(32);
 

@@ -29,7 +29,7 @@ const main = async () => {
     const {deployer, tokenOwner} = await getNamedAccounts();
     const loan_verifier = await ethers.getContract("Verifier", deployer);
 
-    const { proof, publicSignals } = await snarkjs.groth16.fullProve({income: 300000, guard: '0x1234567890abcdef'}, "./circuits/loan.wasm", "./circuits/loan.zkey")
+    const { proof, publicSignals } = await snarkjs.groth16.fullProve({income: 300000, nonce: '0x1234567890abcdef'}, "./circuits/loan.wasm", "./circuits/loan.zkey")
     // from https://githubhot.com/repo/iden3/snarkjs/issues/112
     const [a, b, c, i] = groth16ExportSolidityCallData(unstringifyBigInts(proof), unstringifyBigInts(publicSignals))
 
