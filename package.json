@@ -5,6 +5,7 @@
     "build": "next build",
     "start": "next start",
     "test": "jest",
+    "node": "hardhat chain",
     "circom:dev": "hardhat circom --deterministic --debug --verbose",
     "circom:prod": "hardhat circom --verbose"
   },

@@ -4,10 +4,22 @@ Credits:
 
 https://github.com/0xPARC/circom-starter
 https://medium.com/coinmonks/zk-poker-a-simple-zk-snark-circuit-8ec8d0c5ee52
+https://github.com/enricobottazzi/ZKverse
 
 # Steps to create
 
-`
-npx create-next-app nextjs-blog --example "https://github.com/vercel/next-learn/tree/master/basics/learn-starter"
-yarn add --dev hardhat circomlib hardhat-circom
-`
+`yarn circom:dev`
+
+File definitions according to https://github.com/iden3/snarkjs#readme
+
+Creates the following files:
+
+circuits/poker.r1cs - the r1cs constraint system of the circuit in binary format
+circuits/poker.wasm - the wasm code to generate the witness
+circuits/poker.zkey - verification key for the circuit
+circuits/poker.vkey.json - verification key (.zkey) in JSON format
+contracts/PokerVerifier.sol
+
+`generate the witness here`  - need the wasm file and input.json
+
+`generate the proof here` - need the witness and zkey

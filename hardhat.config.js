@@ -16,7 +16,7 @@ module.exports = {
     ptau: "pot15_final.ptau",
     circuits: [
       {
-        "name": "poker"
+        "name": "loan"
       }
     ],
   },
