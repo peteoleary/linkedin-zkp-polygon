@@ -11,20 +11,16 @@ function p256$1(n) {
   return nstr;
 }
 
+// lifted and modified from snarkjs
 function groth16ExportSolidityCallData(proof, pub) {
 
-  let inputs = "";
-  for (let i=0; i<pub.length; i++) {
-      if (inputs != "") inputs = inputs + ",";
-      inputs = inputs + p256$1(pub[i]);
-  }
+  const inputs = pub.map(x => p256$1(x));
 
   const a = [p256$1(proof.pi_a[0]), p256$1(proof.pi_a[1])]
   const b = [[p256$1(proof.pi_b[0][1]), p256$1(proof.pi_b[0][0])],[p256$1(proof.pi_b[1][1]), p256$1(proof.pi_b[1][0])]]
   const c = [p256$1(proof.pi_c[0]), p256$1(proof.pi_c[1])]
-  const i = [inputs]
 
-  return [a, b, c, i];
+  return [a, b, c, inputs];
 }
 
 const main = async () => {
@@ -33,7 +29,7 @@ const main = async () => {
     const {deployer, tokenOwner} = await getNamedAccounts();
     const loan_verifier = await ethers.getContract("Verifier", deployer);
 
-    const { proof, publicSignals } = await snarkjs.groth16.fullProve({income: 300000}, "./circuits/loan.wasm", "./circuits/loan.zkey")
+    const { proof, publicSignals } = await snarkjs.groth16.fullProve({income: 300000, guard: '0x1234567890abcdef'}, "./circuits/loan.wasm", "./circuits/loan.zkey")
     // from https://githubhot.com/repo/iden3/snarkjs/issues/112
     const [a, b, c, i] = groth16ExportSolidityCallData(unstringifyBigInts(proof), unstringifyBigInts(publicSignals))
 
