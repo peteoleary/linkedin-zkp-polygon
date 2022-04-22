@@ -24,18 +24,24 @@ function groth16ExportSolidityCallData(proof, pub) {
 }
 
 const main = async () => {
-  
+
+  const {verifier, _} = await getNamedAccounts();
+
+  const network = await ethers.provider.getNetwork();
+
+  if (network.name == 'unknown') {
     await deployments.fixture(["Verifier"]);
-    const {deployer, tokenOwner} = await getNamedAccounts();
-    const loan_verifier = await ethers.getContract("Verifier", deployer);
+  }
+    
+  const loan_verifier = await ethers.getContract("Verifier", verifier);
 
-    const { proof, publicSignals } = await snarkjs.groth16.fullProve({income: 300000, nonce: '0x1234567890abcdef'}, "./circuits/loan.wasm", "./circuits/loan.zkey")
-    // from https://githubhot.com/repo/iden3/snarkjs/issues/112
-    const [a, b, c, i] = groth16ExportSolidityCallData(unstringifyBigInts(proof), unstringifyBigInts(publicSignals))
+  const { proof, publicSignals } = await snarkjs.groth16.fullProve({income: 300000, nonce: '0x1234567890abcdef'}, "./circuits/loan.wasm", "./circuits/loan.zkey")
+  // from https://githubhot.com/repo/iden3/snarkjs/issues/112
+  const [a, b, c, i] = groth16ExportSolidityCallData(unstringifyBigInts(proof), unstringifyBigInts(publicSignals))
 
-    const output = await loan_verifier.verifyProof(a, b, c, i);
+  const output = await loan_verifier.verifyProof(a, b, c, i);
 
-    console.log(output)
+  console.log(output)
 }
 
 main()

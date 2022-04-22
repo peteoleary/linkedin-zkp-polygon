@@ -16,10 +16,37 @@
           {
             "type": "node",
             "request": "launch",
+            "name": "deploy",
+            "skipFiles": ["<node_internals>/**"],
+            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/hardhat",
+            "args": ["deploy"],
+            "justMyCode": false
+          },
+          {
+            "type": "node",
+            "request": "launch",
             "name": "compile circuits",
             "skipFiles": ["<node_internals>/**"],
             "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/hardhat",
             "args": [ "circom", "--deterministic", "--debug", "--verbose"],
+            "justMyCode": false
+          },
+          {
+            "type": "node",
+            "request": "launch",
+            "name": "generate",
+            "skipFiles": ["<node_internals>/**"],
+            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/hardhat",
+            "args": [ "generate", "--which-party", "prover"],
+            "justMyCode": false
+          },
+          {
+            "type": "node",
+            "request": "launch",
+            "name": "accounts",
+            "skipFiles": ["<node_internals>/**"],
+            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/hardhat",
+            "args": [ "accounts"],
             "justMyCode": false
           }
     ]

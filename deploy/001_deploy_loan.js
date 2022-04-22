@@ -1,17 +1,20 @@
 // deploy/00_deploy_your_contract.js
 
-module.exports = async ({ getNamedAccounts, deployments }) => {
+module.exports = async (hre) => {
+    const {deployments, getNamedAccounts} = hre;
     const { deploy } = deployments;
     const namedAccounts = await getNamedAccounts()
-    console.log(`namedAccounts deployer=${JSON.stringify(namedAccounts)}`)
-    const { deployer } = namedAccounts;
-    console.log(`LoanVerifier deployer=${deployer}`)
-    await deploy("Verifier", {
+    console.log(`namedAccounts verifier=${JSON.stringify(namedAccounts)}`)
+    const { verifier } = namedAccounts;
+    console.log(`LoanVerifier verifier=${verifier}`)
+    const result = await deploy("Verifier", {
       // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
-      from: deployer,
+      from: verifier,
       // args: ["Hello"],
       log: true,
     });
+
+    console.log(result)
   
     /*
       // Getting a previously deployed contract
