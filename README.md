@@ -68,10 +68,11 @@ Note in the steps below, we reference local files which are representative of th
 
 ## TODO
 
-* Add key files for verifier and prover
-* Add mumbai and matic to hardhat.config.js
+~~* Add key files for verifier and prover~~
+~~* Add mumbai and matic to hardhat.config.js~~
+~~* Test Javascript code on mumbai network~~
 * Work out step-by-step circom and snarkjs commands
 * Figure out how to change contract name in SnarkJS
 * Translate step-by-step into Javascript code, test on localhost (fork SnarkJS as needed)
-* Test Javascript code on mumbai network
 * Investigate groth v. plonk, ptau file creation/use
+* Integrate with on-chain loan agreement
