@@ -12,7 +12,7 @@ const fs = require("fs");
  * @type import('hardhat/config').HardhatUserConfig
  */
 
- const defaultNetwork = "mumbai";
+ const defaultNetwork = "hardhat";
 
  const keyPath = "./keys/"
 
@@ -78,7 +78,12 @@ module.exports = {
     ptau: "pot15_final.ptau",
     circuits: [
       {
-        "name": "loan"
+        "name": "loan",
+        "protocol": "plonk"
+      },
+      {
+        "name": "auth",
+        "protocol": "plonk",
       }
     ],
   },

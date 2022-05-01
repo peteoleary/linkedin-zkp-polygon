@@ -1,5 +1,6 @@
 const childProcess = require("child_process");
 const fs = require('fs')
+const snarkjs = require('snarkjs')
 
 /**
  * @param {string} command A shell command to execute
@@ -41,6 +42,10 @@ function get_circuit_directory(circuit_name) {
   return `circuits/${circuit_name}`
 }
 
+function get_js_directory(circuit_name) {
+  return `${get_circuit_directory(circuit_name)}/${circuit_name}_js`
+}
+
 const CircomCompiler = {
 
    async compile_circuit(circuit_name, overwrite = false)  {
@@ -61,8 +66,7 @@ const CircomCompiler = {
       return execute(`circom ${cir_dir}.circom --r1cs --wasm --sym -o ${cir_dir}`)
     },
     async generate_witness(circuit_name) {
-      const cir_dir = get_circuit_directory(circuit_name)
-      const js_dir = `${cir_dir}/${circuit_name}_js`
+      const js_dir = get_js_directory(circuit_name)
       const wc  = require(`../${js_dir}/witness_calculator.js`);
 
       const input = JSON.parse(fs.readFileSync(get_circuit_directory(circuit_name) + '.json', "utf8"));  // json
@@ -81,7 +85,8 @@ const CircomCompiler = {
     },
 
     async create_zkey(circuit_name)  {
-      // generate_witness.js circuit.wasm ../input.json ../witness.wtns
+      //snarkjs plonk setup circuit.r1cs pot12_final.ptau circuit_final.zkey
+      snarkjs.plonk.fullProve
     }
 
 }

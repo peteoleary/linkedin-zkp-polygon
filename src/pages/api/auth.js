@@ -1,8 +1,7 @@
 const Handlebars = require('handlebars')
 const fs = require('fs')
 const crypto = require('crypto')
-const snarkjs = require('snarkjs')
-const circom1Compiler = require("circom")
+const cc = require("../../circom_compiler")
 
 const resolveTemplate = (template_name, vars) => {
   // TODO: figure out relative path
@@ -13,22 +12,17 @@ const resolveTemplate = (template_name, vars) => {
   return template(vars)
 }
 
-const makeFileName = (circuit_name, output_name, ext) => {
-  return `circuits/${circuit_name}.${output_name}.${ext}`
+const makeCircuitName = (circuit_name, output_name) => {
+  return `${circuit_name}.${output_name}`
 }
 
-const makeCircuit = async (circuit_name, output_name, vars) => {
-  const resolvedCircuit = resolveTemplate(`${circuit_name}.circom`, vars)
+const makeCircuit = async (input_circuit_name, output_name, vars) => {
+  const resolvedCircuit = resolveTemplate(`${input_circuit_name}.circom`, vars)
 
-  const circuit_file_name = makeFileName(circuit_name, output_name, 'circom')
-  fs.writeFileSync(circuit_file_name, resolvedCircuit, 'utf8')
+  const circuit_name = makeCircuitName(input_circuit_name, output_name)
+  fs.writeFileSync(`circuits/${circuit_name}.circom`, resolvedCircuit, 'utf8')
   
-  const compile_result = await circom1Compiler.compiler(circuit_file_name, {
-    watFileName: makeFileName(circuit_name, output_name, 'wat'),
-    wasmFileName: makeFileName(circuit_name, output_name, 'wasm'),
-    r1csFileName: makeFileName(circuit_name, output_name, 'r1cs'),
-  })
-  console.log(compile_result)
+  cc.compile_circuit(circuit_name)
 }
 
 async function handler(req, res) {
