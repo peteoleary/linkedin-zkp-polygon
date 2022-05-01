@@ -46,6 +46,18 @@ function get_js_directory(circuit_name) {
   return `${get_circuit_directory(circuit_name)}/${circuit_name}_js`
 }
 
+function get_input_json(circuit_name) {
+  return JSON.parse(fs.readFileSync(get_circuit_directory(circuit_name) + '.json', "utf8"));  // json
+}
+
+function get_wasm_file_name(circuit_name) {
+  return `${get_js_directory(circuit_name)}/${circuit_name}.wasm`
+}
+
+function get_zkey_name(circuit_name) {
+  return `${get_circuit_directory(circuit_name)}/${circuit_name}.zkey`
+}
+
 const CircomCompiler = {
 
    async compile_circuit(circuit_name, overwrite = false)  {
@@ -69,9 +81,9 @@ const CircomCompiler = {
       const js_dir = get_js_directory(circuit_name)
       const wc  = require(`../${js_dir}/witness_calculator.js`);
 
-      const input = JSON.parse(fs.readFileSync(get_circuit_directory(circuit_name) + '.json', "utf8"));  // json
+      const input = get_input_json(circuit_name)
       
-      const buffer = fs.readFileSync(`${js_dir}/${circuit_name}.wasm`);
+      const buffer = fs.readFileSync(get_wasm_file_name(circuit_name));
       wc(buffer).then(async witnessCalculator => {
       //    const w= await witnessCalculator.calculateWitness(input,0);
       //    for (let i=0; i< w.length; i++){
@@ -83,12 +95,22 @@ const CircomCompiler = {
       });
         });
     },
-
     async create_zkey(circuit_name)  {
-      //snarkjs plonk setup circuit.r1cs pot12_final.ptau circuit_final.zkey
-      snarkjs.plonk.fullProve
-    }
+      await snarkjs.plonk.setup(`${get_circuit_directory(circuit_name)}/${circuit_name}.r1cs`, 'circuits/pot15_final.ptau', get_zkey_name(circuit_name))
+    },
 
+    async create_proof(circuit_name)  {
+      //snarkjs plonk setup circuit.r1cs pot12_final.ptau circuit_final.zkey
+      const input = get_input_json(circuit_name)
+      const { proof , publicSignals } = await snarkjs.plonk.fullProve(
+        input, get_wasm_file_name(circuit_name), get_zkey_name(circuit_name));
+        fs.writeFileSync(`${get_circuit_directory(circuit_name)}/${circuit_name}.proof`, JSON.stringify(proof))
+    },
+
+    async create_contract(circuit_name)  {
+      const result = await snarkjs.zKey.exportSolidityVerifier(get_zkey_name(circuit_name), {plonk: fs.readFileSync('node_modules/snarkjs/templates/verifier_plonk.sol.ejs').toString()})
+      fs.writeFileSync(`${get_circuit_directory(circuit_name)}/${circuit_name}_verifier.sol`, result)
+    }
 }
 
 module.exports = CircomCompiler
