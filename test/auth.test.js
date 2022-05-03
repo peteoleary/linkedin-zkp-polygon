@@ -1,4 +1,3 @@
-const { JsxEmit } = require('typescript');
 const auth = require('../src/pages/api/auth')
 
 test('responds to /auth', () => {
@@ -13,13 +12,3 @@ test('responds to /auth', () => {
         expect(data.captchaCodeHash).toEqual('6d46b72ff56458eaecce4bd88876de9e');
     })
 });
-
-test('compiles circuits programatically', async () => {
-    jest.setTimeout(10 * 1000)
-    const cc = require('../src/circom_compiler')
-    await cc.compile_circuit('loan', true)
-    await cc.generate_witness('loan')
-    await cc.create_zkey('loan')
-    await cc.create_proof('loan')
-    await cc.create_contract('loan')
-})
