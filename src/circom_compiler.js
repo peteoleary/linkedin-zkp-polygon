@@ -21,9 +21,10 @@ function execute(command) {
      * @param {string|Buffer} standardError The error resulting of the shell command execution
      * @see https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback
      */
+    console.log(command)
     childProcess.exec(command, function(error, standardOutput, standardError) {
       if (error) {
-        reject();
+        reject(error.message);
 
         return;
       }
@@ -46,7 +47,7 @@ class CircomCompiler {
   }
 
    async compile_circuit(overwrite = false)  {
-      const cir_dir = this.get_circuit_directory(this._name)
+      const cir_dir = this.get_circuit_directory()
 
       // one of the all time great SO threads https://stackoverflow.com/questions/13696148/node-js-create-folder-or-use-existing
       // there is an inverse correlation between how many lines of code there are in an answer and the number of comments on it
@@ -83,7 +84,7 @@ class CircomCompiler {
     }
 
     async create_zkey()  {
-      await snarkjs.plonk.setup(`${this.get_circuit_directory(this._name)}/${this._name}.r1cs`, 'circuits/pot15_final.ptau', this.get_zkey_name(this._name))
+      await snarkjs.plonk.setup(`${this.get_circuit_directory()}/${this._name}.r1cs`, 'circuits/pot15_final.ptau', this.get_zkey_name(this._name))
     }
 
 
@@ -92,7 +93,7 @@ class CircomCompiler {
       const input = this.get_input_json(this._name)
       const { proof , publicSignals } = await snarkjs.plonk.fullProve(
         input, this.get_wasm_file_name(this._name), this.get_zkey_name(this._name));
-        fs.writeFileSync(`${this.get_circuit_directory(this._name)}/${this._name}.proof`, JSON.stringify(proof))
+        fs.writeFileSync(`${this.get_circuit_directory()}/${this._name}.proof`, JSON.stringify(proof))
     }
 
     get_contract_name() {
@@ -116,11 +117,11 @@ class CircomCompiler {
     }
     
     get_js_directory() {
-      return `${this.get_circuit_directory(this._name)}/${this._name}_js`
+      return `${this.get_circuit_directory()}/${this._name}_js`
     }
     
     get_input_json() {
-      return JSON.parse(fs.readFileSync(this.get_circuit_directory(this._name) + '.json', "utf8"));  // json
+      return JSON.parse(fs.readFileSync(this.get_circuit_directory() + '.json', "utf8"));  // json
     }
     
     get_wasm_file_name() {
@@ -128,7 +129,7 @@ class CircomCompiler {
     }
     
     get_zkey_name() {
-      return `${this.get_circuit_directory(this._name)}/${this._name}.zkey`
+      return `${this.get_circuit_directory()}/${this._name}.zkey`
     }
 }
 
