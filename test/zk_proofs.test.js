@@ -1,5 +1,7 @@
 const { expect } = require('chai');
+const  fs  = require('fs');
 const { eq } = require('lodash');
+const { hasUncaughtExceptionCaptureCallback } = require('process');
 const ZKProof = require('../src/zk_proofs')
 
 describe("zk proofs instance", function () {
@@ -16,14 +18,17 @@ describe("zk proofs instance", function () {
     }, 30000)
 
     test('compiles circuits programatically',  async () => {
-        return await new ZKProof('auth', 'pete@timelight.com').makeAll()
+        await new ZKProof('auth', 'pete@timelight.com').makeAll()
+        expect(fs.existsSync('circuits/auth_pete_timelight_com')).to.equal(true)
+        expect(fs.existsSync('circuits/auth_pete_timelight_com/auth_pete_timelight_com.zkey')).to.equal(true)
+        expect(fs.existsSync('contracts/AuthPeteTimelightComVerifier.sol')).to.equal(true)
     }, 30000)
 
-    test('compiles proof',  async () => {
-        return await new ZKProof('auth', 'pete@timelight.com').compileContract()
+    test('compiles contract',  async () => {
+        await new ZKProof('auth', 'pete@timelight.com').compileContract()
     }, 30000)
     
-    test('deploys proof',  async () => {
+    test('deploys contract',  async () => {
         return await new ZKProof('auth', 'pete@timelight.com').deployContract()
     }, 30000)
 });

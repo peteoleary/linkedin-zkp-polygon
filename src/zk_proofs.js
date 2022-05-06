@@ -1,6 +1,7 @@
 
 const CircomCompiler = require('./circom_compiler')
-const {compile, deploy} = require('./deploy')
+const deploy = require('./deploy')
+const compile = require('./compile')
 const Handlebars = require('handlebars')
 const fs = require('fs')
 

@@ -69,7 +69,7 @@ module.exports = {
       chainId: 137,
     },
   },
-  solidity: "0.6.11",
+  solidity: "0.8.13",
   namedAccounts: {
     verifier: "privatekey://" + mnemonic('verifier').privateKey
   },
@@ -83,6 +83,10 @@ module.exports = {
       },
       {
         "name": "auth",
+        "protocol": "plonk",
+      },
+      {
+        "name": "auth_pete_timelight_com",
         "protocol": "plonk",
       }
     ],

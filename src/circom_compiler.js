@@ -101,7 +101,7 @@ class CircomCompiler {
     }
 
     get_contract_file() {
-      return `contracts/${this._name}_verifier.sol`
+      return `contracts/${this.get_contract_name()}.sol`
     }
 
     async create_contract()  {
