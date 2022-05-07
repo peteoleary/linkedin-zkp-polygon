@@ -1,6 +1,37 @@
-import Head from 'next/head'
+import React from "react";
+import Head from "next/head";
+import ReCAPTCHA from "react-google-recaptcha";
+
+import axios from "axios";
 
 export default function Home() {
+  const [email, setEmail] = React.useState("");
+  const recaptchaRef = React.createRef();
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Execute the reCAPTCHA when the form is submitted
+    recaptchaRef.current.execute();
+  };
+
+  const handleChange = (event) => {
+    event.preventDefault();
+    // Execute the reCAPTCHA when the form is submitted
+    setEmail(event.target.value)
+  };
+  
+  const onReCAPTCHAChange = (captchaCode) => {
+    // If the reCAPTCHA code is null or undefined indicating that
+    // the reCAPTCHA was expired then return early
+    if(!captchaCode) {
+      return;
+    }
+
+    recaptchaRef.current.reset();
+
+    axios.post("/api/auth", {email: email, captchaCode: captchaCode})
+  }
+
   return (
     <div className="container">
       <Head>
@@ -10,18 +41,34 @@ export default function Home() {
 
       <main>
         <h1 className="title">
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          Welcome to Loan Application
         </h1>
 
         <p className="description">
-          Get started by editing <code>pages/index.js</code>
+          Get started by proving you are a human
+          <form onSubmit={handleSubmit}>
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              size="invisible"
+              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+              onChange={onReCAPTCHAChange}
+            />
+            <input
+              onChange={handleChange}
+              required
+              type="email"
+              name="email"
+              placeholder="Email"
+            />
+            <button type="submit">Register</button>
+          </form>
         </p>
 
         <div className="grid">
-          <a href="https://nextjs.org/docs" className="card">
+          <div className="card">
             <h3>Documentation &rarr;</h3>
             <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+          </div>
 
           <a href="https://nextjs.org/learn" className="card">
             <h3>Learn &rarr;</h3>

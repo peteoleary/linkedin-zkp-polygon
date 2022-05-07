@@ -12,7 +12,7 @@ const fs = require("fs");
  * @type import('hardhat/config').HardhatUserConfig
  */
 
- const defaultNetwork = "mumbai";
+ const defaultNetwork = "hardhat";
 
  const keyPath = "./keys/"
 
@@ -69,7 +69,7 @@ module.exports = {
       chainId: 137,
     },
   },
-  solidity: "0.6.11",
+  solidity: "0.8.13",
   namedAccounts: {
     verifier: "privatekey://" + mnemonic('verifier').privateKey
   },
@@ -78,7 +78,16 @@ module.exports = {
     ptau: "pot15_final.ptau",
     circuits: [
       {
-        "name": "loan"
+        "name": "loan",
+        "protocol": "plonk"
+      },
+      {
+        "name": "auth",
+        "protocol": "plonk",
+      },
+      {
+        "name": "auth_pete_timelight_com",
+        "protocol": "plonk",
       }
     ],
   },
