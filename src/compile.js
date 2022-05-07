@@ -32,8 +32,6 @@ function compile(name) {
     const output = JSON.parse(solc.compile(JSON.stringify(input)));
     console.log('Done');
 
-    let shouldBuild = true;
-
     if (output.errors) {
         console.error(output.errors);
         // throw '\nError in compilation please check the contract\n';
@@ -46,34 +44,29 @@ function compile(name) {
         }
     }
 
+    // this is where hardhat expects output
     const buildFolderPath = path.resolve('artifacts', 'contracts', file_name)
 
-    if (shouldBuild) {
-        console.log('\nBuilding please wait...');
+    console.log('\nBuilding please wait...');
 
-        fs.removeSync(buildFolderPath);
-        fs.ensureDirSync(buildFolderPath);
+    fs.removeSync(buildFolderPath);
+    fs.ensureDirSync(buildFolderPath);
 
-        for (let contractFile in output.contracts) {
-            for (let key in output.contracts[contractFile]) {
-                fs.outputJsonSync(
-                    path.resolve(buildFolderPath, `${key}.json`),
-                    {
-                        abi: output.contracts[contractFile][key]["abi"],
-                        bytecode: output.contracts[contractFile][key]["evm"]["bytecode"]["object"]
-                    },
-                    {
-                        spaces: 2,
-                        EOL: "\n"
-                    }
-                );
-            }
+    for (let contractFile in output.contracts) {
+        for (let key in output.contracts[contractFile]) {
+            fs.outputJsonSync(
+                path.resolve(buildFolderPath, `${key}.json`),
+                {
+                    abi: output.contracts[contractFile][key]["abi"],
+                    bytecode: output.contracts[contractFile][key]["evm"]["bytecode"]["object"]
+                },
+                {
+                    spaces: 2,
+                    EOL: "\n"
+                }
+            );
         }
-        console.log('Build finished successfully!\n');
-    } else {
-        console.log('\nBuild failed\n');
     }
-
 }
 
 if (require.main === module) {

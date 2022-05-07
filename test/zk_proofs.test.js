@@ -26,6 +26,7 @@ describe("zk proofs instance", function () {
 
     test('compiles contract',  async () => {
         await new ZKProof('auth', 'pete@timelight.com').compileContract()
+        expect(fs.existsSync('artifacts/contracts/AuthPeteTimelightComVerifier.sol/AuthPeteTimelightComVerifier.json')).to.equal(true)
     }, 30000)
     
     test('deploys contract',  async () => {
