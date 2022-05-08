@@ -2,6 +2,7 @@ const childProcess = require("child_process");
 const fs = require('fs')
 const snarkjs = require('snarkjs')
 var _ = require('lodash');
+require('dotenv').config()
 
 /**
  * @param {string} command A shell command to execute
@@ -24,12 +25,14 @@ function execute(command) {
     console.log(command)
     childProcess.exec(command, function(error, standardOutput, standardError) {
       if (error) {
+        console.log(error.message)
         reject(error.message);
 
         return;
       }
 
       if (standardError) {
+        console.log(standardError)
         reject(standardError);
 
         return;
@@ -59,9 +62,11 @@ class CircomCompiler {
       else {
         fs.mkdirSync(cir_dir);
       }
+
+      const circom_program = process.env.CIRCOM_PROGRAM || 'circom'
       
       // TODO: parse stdout and turn it into useful information
-      return execute(`circom ${cir_dir}.circom --r1cs --wasm --sym -o ${cir_dir}`)
+      return execute(`${circom_program} ${cir_dir}.circom --r1cs --wasm --sym -o ${cir_dir}`)
     }
 
     async generate_witness(circuit_name) {

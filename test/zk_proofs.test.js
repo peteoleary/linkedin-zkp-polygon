@@ -1,7 +1,5 @@
 const { expect } = require('chai');
 const  fs  = require('fs');
-const { eq } = require('lodash');
-const { hasUncaughtExceptionCaptureCallback } = require('process');
 const ZKProof = require('../src/zk_proofs')
 
 describe("zk proofs instance", function () {
@@ -31,5 +29,9 @@ describe("zk proofs instance", function () {
     
     test('deploys contract',  async () => {
         return await new ZKProof('auth', 'pete@timelight.com').deployContract()
+    }, 30000)
+
+    test('tests contract',  async () => {
+        new ZKProof('auth', 'pete@timelight.com').callContract()
     }, 30000)
 });

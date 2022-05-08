@@ -4,9 +4,9 @@ require('hardhat-circom');
 require('hardhat-deploy');
 require("@nomiclabs/hardhat-ethers");
 
-require("hardhat-faucet")
-
 const fs = require("fs");
+
+console.log(`hardhat.config.js`)
 
 /**
  * @type import('hardhat/config').HardhatUserConfig
@@ -19,9 +19,9 @@ const fs = require("fs");
  function mnemonic(which) {
   try {
     const phrase = fs.readFileSync(keyPath + `${which}.txt`).toString().trim();
+    console.log(`mnemonic(${which})`)
     // check phrase validity
-    let mnemonicWallet = Wallet.fromMnemonic(phrase);
-    return mnemonicWallet
+    return Wallet.fromMnemonic(phrase)
   } catch (e) {
     if (defaultNetwork !== "localhost") {
       console.log(
@@ -56,7 +56,7 @@ module.exports = {
       url: "http://localhost:8545",
     },
     hardhat: {
-      accounts: accounts()
+      // accounts: accounts()
     },
     mumbai: {
       url: "https://rpc-mumbai.maticvigil.com/",
@@ -71,7 +71,7 @@ module.exports = {
   },
   solidity: "0.8.13",
   namedAccounts: {
-    verifier: "privatekey://" + mnemonic('verifier').privateKey
+    // verifier: "privatekey://" + mnemonic('verifier').privateKey
   },
   circom: {
     inputBasePath: "./circuits",

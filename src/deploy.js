@@ -1,26 +1,34 @@
 /* eslint no-use-before-define: "warn" */
 const hre = require("hardhat");
-const {ethers} = hre;
+const {ethers, deployments, getNamedAccounts} = hre;
 const fs = require('fs-extra');
 
-const deploy = async ( name ) => {
-  const {deployments, getNamedAccounts} = hre;
-  const { deploy } = deployments;
-  const namedAccounts = await getNamedAccounts()
+const deploy = async ( name, deployer = null ) => {
 
-  console.log(`namedAccounts verifier=${JSON.stringify(namedAccounts)}`)
-  
-  const { verifier } = namedAccounts;
-  console.log(`${name} verifier=${verifier}`)
+  const network = await ethers.provider.getNetwork();
 
-  const result = await deploy(name, {
+  if (network.name == 'unknown') {
+      await deployments.fixture([name]);
+  }
+
+  if (!deployer) {
+    const namedAccounts = await getNamedAccounts()
+    console.log(`namedAccounts namedAccounts=${JSON.stringify(namedAccounts)}`)
+
+    const { verifier } = namedAccounts;
+    deployer = verifier
+  }
+
+  console.log(`${name} deployer=${deployer}`)
+  const result = await deployments.deploy(name, {
     // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
-    from: verifier,
+    from: deployer,
     // args: ["Hello"],
     log: true,
   });
 
   console.log(result)
+  return result
 }
 
 if (require.main === module) {
