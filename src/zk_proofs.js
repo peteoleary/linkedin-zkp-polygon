@@ -79,16 +79,16 @@ class ZKProof {
     }
 
     async compileContract() {
-        compile(this._cc.get_contract_name())
-        return Promise.resolve()
+        const result = compile(this._cc.get_contract_name())
+        return Promise.resolve(result)
     }
 
     async deployContract() {
-        deploy(this._cc.get_contract_name())
-        return Promise.resolve()
+        const result = deploy(this._cc.get_contract_name())
+        return Promise.resolve(result)
     }
 
-    async callContract() {
+    async callContract(proof, publicSignals) {
 
         // TODO: pull all the hardhat specific code together from here, deploy.js and compile.js
         const hre = require("hardhat");
@@ -104,13 +104,13 @@ class ZKProof {
             
         const loan_verifier = await ethers.getContract(this._cc.get_contract_name(), verifier);
 
-        const { proof, publicSignals } = await snarkjs.groth16.fullProve({income: 300000, nonce: '0x1234567890abcdef'}, "./circuits/loan.wasm", "./circuits/loan.zkey")
+        // const { proof, publicSignals } = await snarkjs.groth16.fullProve({income: 300000, nonce: '0x1234567890abcdef'}, "./circuits/loan.wasm", "./circuits/loan.zkey")
         // from https://githubhot.com/repo/iden3/snarkjs/issues/112
         const [a, b, c, i] = groth16ExportSolidityCallData(unstringifyBigInts(proof), unstringifyBigInts(publicSignals))
 
         const output = await loan_verifier.verifyProof(a, b, c, i);
 
-        console.log(output)
+        return output
     }
 }
 

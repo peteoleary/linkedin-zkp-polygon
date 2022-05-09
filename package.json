@@ -38,6 +38,7 @@
     "@types/mocha": "^9.1.0",
     "@types/node": "^17.0.23",
     "@types/react": "18.0.1",
+    "@types/react-google-recaptcha": "^2.1.5",
     "chai": "^4.3.6",
     "chai-ethers": "^0.0.1",
     "circomlib": "^2.0.3",

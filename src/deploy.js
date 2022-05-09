@@ -27,7 +27,6 @@ const deploy = async ( name, deployer = null ) => {
     log: true,
   });
 
-  console.log(result)
   return result
 }
 

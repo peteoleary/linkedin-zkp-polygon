@@ -67,6 +67,8 @@ function compile(name) {
             );
         }
     }
+
+    return output
 }
 
 if (require.main === module) {

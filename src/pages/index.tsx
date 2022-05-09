@@ -8,10 +8,13 @@ import axios from "axios";
 export default function Home() {
   const [email, setEmail] = React.useState("");
   const [authResult, setAuthResult] = React.useState({});
+  const [deployResult, setDeployResult] = React.useState({});
   const recaptchaRef = React.createRef();
 
   const handleCircuitSubmit = (event) => {
-    debugger
+    axios.post("/api/deploy", {email: email}).then(deploy_result => {
+      setDeployResult(deploy_result.data)
+    })
     event.preventDefault();
   }
 
@@ -27,7 +30,7 @@ export default function Home() {
     setEmail(event.target.value)
   };
   
-  const onReCAPTCHAChange = (captchaCode) => {
+  const onReCAPTCHAChange = (captchaCode: string) => {
     // If the reCAPTCHA code is null or undefined indicating that
     // the reCAPTCHA was expired then return early
     if(!captchaCode) {
