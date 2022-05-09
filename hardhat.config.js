@@ -54,9 +54,10 @@ module.exports = {
   networks: {
     localhost: {
       url: "http://localhost:8545",
+      
     },
     hardhat: {
-      // accounts: accounts()
+      accounts: accounts()
     },
     mumbai: {
       url: "https://rpc-mumbai.maticvigil.com/",
@@ -71,7 +72,7 @@ module.exports = {
   },
   solidity: "0.8.13",
   namedAccounts: {
-    // verifier: "privatekey://" + mnemonic('verifier').privateKey
+    verifier: "privatekey://" + mnemonic('verifier').privateKey
   },
   circom: {
     inputBasePath: "./circuits",

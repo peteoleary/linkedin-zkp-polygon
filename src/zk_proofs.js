@@ -69,12 +69,13 @@ class ZKProof {
     }
 
     async makeAll() {
-        await this._cc.compile_circuit(true)
-        await this._cc.generate_witness()
-        await this._cc.create_zkey()
-        await this._cc.create_proof()
-        await this._cc.create_contract()
-        return Promise.resolve()
+        const results = {}
+        results['circuit'] = await this._cc.compile_circuit(true)
+        results['witness'] = await this._cc.generate_witness()
+        results['zkey'] = await this._cc.create_zkey()
+        results['proof'] = await this._cc.create_proof()
+        results['contract'] = await this._cc.create_contract()
+        return Promise.resolve(results)
     }
 
     async compileContract() {

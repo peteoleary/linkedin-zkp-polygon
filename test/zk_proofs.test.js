@@ -16,7 +16,10 @@ describe("zk proofs instance", function () {
     }, 30000)
 
     test('compiles circuits programatically',  async () => {
-        await new ZKProof('auth', 'pete@timelight.com').makeAll()
+        const results = await new ZKProof('auth', 'pete@timelight.com').makeAll()
+
+        expect(results['circuit']).to.not.equal(null)
+
         expect(fs.existsSync('circuits/auth_pete_timelight_com')).to.equal(true)
         expect(fs.existsSync('circuits/auth_pete_timelight_com/auth_pete_timelight_com.zkey')).to.equal(true)
         expect(fs.existsSync('contracts/AuthPeteTimelightComVerifier.sol')).to.equal(true)

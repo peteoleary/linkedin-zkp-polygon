@@ -1,14 +1,21 @@
 import React from "react";
 import Head from "next/head";
 import ReCAPTCHA from "react-google-recaptcha";
+import MetaMaskCard from '../components/connectorCards/MetaMaskCard'
 
 import axios from "axios";
 
 export default function Home() {
   const [email, setEmail] = React.useState("");
+  const [authResult, setAuthResult] = React.useState({});
   const recaptchaRef = React.createRef();
 
-  const handleSubmit = (event) => {
+  const handleCircuitSubmit = (event) => {
+    debugger
+    event.preventDefault();
+  }
+
+  const handleCaptchaSubmit = (event) => {
     event.preventDefault();
     // Execute the reCAPTCHA when the form is submitted
     recaptchaRef.current.execute();
@@ -29,7 +36,22 @@ export default function Home() {
 
     recaptchaRef.current.reset();
 
-    axios.post("/api/auth", {email: email, captchaCode: captchaCode})
+    axios.post("/api/auth", {email: email, captchaCode: captchaCode}).then(auth_result => {
+      setAuthResult(auth_result.data)
+    })
+  }
+
+  const circuitInfo = () => {
+    if (!authResult.circuit) {
+      return <div>Please log in with CAPTCHA</div>
+    }
+      
+    return  (
+      <div>
+        <MetaMaskCard />
+        <button onClick={handleCircuitSubmit}>Deploy</button>
+      </div>
+      )
   }
 
   return (
@@ -44,9 +66,9 @@ export default function Home() {
           Welcome to Loan Application
         </h1>
 
-        <p className="description">
+        <div className="description">
           Get started by proving you are a human
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleCaptchaSubmit}>
             <ReCAPTCHA
               ref={recaptchaRef}
               size="invisible"
@@ -62,36 +84,30 @@ export default function Home() {
             />
             <button type="submit">Register</button>
           </form>
-        </p>
+        </div>
 
         <div className="grid">
           <div className="card">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
+            <h3>ZKP Circuit Info &rarr;</h3>
+            {circuitInfo()}
           </div>
 
-          <a href="https://nextjs.org/learn" className="card">
-            <h3>Learn &rarr;</h3>
+          <div className="card">
+            <h3>Login Contract Info &rarr;</h3>
             <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
+          </div>
 
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className="card"
-          >
-            <h3>Examples &rarr;</h3>
+          <div className="card">
+            <h3>Loan Information &rarr;</h3>
             <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
+          </div>
 
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="card"
-          >
-            <h3>Deploy &rarr;</h3>
+          <div className="card">
+            <h3>Loan Contract &rarr;</h3>
             <p>
               Instantly deploy your Next.js site to a public URL with Vercel.
             </p>
-          </a>
+          </div>
         </div>
       </main>
 

@@ -65,8 +65,9 @@ class CircomCompiler {
 
       const circom_program = process.env.CIRCOM_PROGRAM || 'circom'
       
-      // TODO: parse stdout and turn it into useful information
-      return execute(`${circom_program} ${cir_dir}.circom --r1cs --wasm --sym -o ${cir_dir}`)
+      execute(`${circom_program} ${cir_dir}.circom --r1cs --wasm --sym -o ${cir_dir}`)
+
+      return fs.readFileSync(this.get_circuit_file_name()).toString()
     }
 
     async generate_witness(circuit_name) {
@@ -76,20 +77,19 @@ class CircomCompiler {
       const input = this.get_input_json(this._name)
       
       const buffer = fs.readFileSync(this.get_wasm_file_name(this._name));
-      wc(buffer).then(async witnessCalculator => {
-      //    const w= await witnessCalculator.calculateWitness(input,0);
-      //    for (let i=0; i< w.length; i++){
-      //	console.log(w[i]);
-      //    }
+      const witnessCalculator = await wc(buffer)
       const buff= await witnessCalculator.calculateWTNSBin(input,0);
-      fs.writeFileSync(`${js_dir}/${this._name}.wtns`, buff, function(err) {
-          if (err) throw err;
-      });
-        });
+
+      fs.writeFileSync(`${js_dir}/${this._name}.wtns`, buff)
+
+      return buff
     }
 
     async create_zkey()  {
       await snarkjs.plonk.setup(`${this.get_circuit_directory()}/${this._name}.r1cs`, 'circuits/pot15_final.ptau', this.get_zkey_name(this._name))
+      // TODO: this doesn't work...
+      // return snarkjs.zKey.exportJson(this.get_zkey_name(this._name))
+      return this.get_zkey_name(this._name)
     }
 
 
@@ -99,6 +99,8 @@ class CircomCompiler {
       const { proof , publicSignals } = await snarkjs.plonk.fullProve(
         input, this.get_wasm_file_name(this._name), this.get_zkey_name(this._name));
         fs.writeFileSync(`${this.get_circuit_directory()}/${this._name}.proof`, JSON.stringify(proof))
+
+      return proof
     }
 
     get_contract_name() {
@@ -115,6 +117,8 @@ class CircomCompiler {
       result = result.replace('PlonkVerifier', this.get_contract_name(this._name))
 
       fs.writeFileSync(this.get_contract_file(this._name), result)
+
+      return result
     }
 
     get_circuit_directory() {
@@ -131,6 +135,10 @@ class CircomCompiler {
     
     get_wasm_file_name() {
       return `${this.get_js_directory(this._name)}/${this._name}.wasm`
+    }
+
+    get_circuit_file_name() {
+      return `${this.get_circuit_directory(this._name)}.circom`
     }
     
     get_zkey_name() {
