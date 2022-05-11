@@ -1,5 +1,7 @@
 # Zero Knowledge Proof Loan Application
 
+WORK IN PROGRESS. I am adding a CAPTCHA and email based login scheme to this project which creates a ZKP verifier on the blockchain for the loan applicant. As of May 11, 2022 this (sort of) works but I still have a lot of UI work to do plus I haven't updated the docs below.
+
 ## Description
 
 This repo implements a very simple scheme where a "beneficiary" wants to prove their income meets a threshold set by a loan company who is the "verifier" of the information. The income information is provided by the "prover". This scheme attempts to yield as little information as possible in order to complete the business transaction.
