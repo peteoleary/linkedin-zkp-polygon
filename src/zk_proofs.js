@@ -111,7 +111,6 @@ class ZKProof {
         }
 
         const {verifier, _} = await getNamedAccounts();
-            
         return ethers.getContract(this._cc.get_contract_name(), verifier);
     }
 

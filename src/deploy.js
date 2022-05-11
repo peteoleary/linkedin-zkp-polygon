@@ -28,6 +28,8 @@ const deploy = async ( name, deployer = null ) => {
     log: true,
   });
 
+  // TODO: need to refresh deployments
+
   return result
 }
 
