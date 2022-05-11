@@ -1,4 +1,3 @@
-const crypto = require('crypto')
 const ZKProof = require('../../zk_proofs')
 
 async function handler(req, res) {

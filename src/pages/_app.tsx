@@ -1,6 +1,8 @@
-import { useWeb3React, Web3ReactHooks, Web3ReactProvider, initializeConnector } from '@web3-react/core'
-
+import { Web3ReactProvider, initializeConnector } from '@web3-react/core'
+// import dynamic from 'next/dynamic'
+// const {MetaMask} = dynamic(() => import('@web3-react/metamask'))
 import { MetaMask } from '@web3-react/metamask'
+
 import type { Connector } from '@web3-react/types'
 
 import type { AppProps as NextAppProps } from "next/app";
@@ -12,7 +14,7 @@ function getName(connector: Connector) {
   return 'Unknown'
 }
 
-const [metaMask, metaMaskHooks] = initializeConnector<MetaMask>((actions) => new MetaMask(actions))
+const [metaMask, metaMaskHooks] = initializeConnector<MetaMask>((actions) => new MetaMask(actions, false))
 
 const connectors: [MetaMask][] = [
   [metaMask, metaMaskHooks],

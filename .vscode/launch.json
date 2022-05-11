@@ -13,13 +13,12 @@
       ],
       "type": "node"
     },
-      {
-        "name": "Next.js: debug server-side",
-        "type": "node-terminal",
-        "request": "launch",
-        "command": "next dev",
-        "runtimeExecutable": "yarn"
-      },
+    {
+      "name": "Next.js: debug server-side",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "yarn run dev"
+    },
         {
             "type": "node",
             "request": "launch",

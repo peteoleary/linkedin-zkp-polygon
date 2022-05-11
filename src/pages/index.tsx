@@ -2,16 +2,48 @@ import React from "react";
 import Head from "next/head";
 import ReCAPTCHA from "react-google-recaptcha";
 import MetaMaskCard from '../components/connectorCards/MetaMaskCard'
+import { css } from "@emotion/react";
+import BeatLoader from "react-spinners/BeatLoader"; 
+
+import Cookies from 'universal-cookie';
 
 import axios from "axios";
+
+import dynamic from 'next/dynamic';
+
+const BrowserReactJsonView = dynamic(() => import('react-json-view'), {
+  ssr: false,
+});
+
 
 export default function Home() {
   const [email, setEmail] = React.useState("");
   const [authResult, setAuthResult] = React.useState({});
   const [deployResult, setDeployResult] = React.useState({});
   const recaptchaRef = React.createRef();
+  
+  const cookies = new Cookies();
+
+  React.useEffect(() => {
+    let cookie_value
+    if (cookie_value = cookies.get('auth_email')) {
+      setEmail(cookie_value)
+    }
+  }, [])
+  
+  React.useEffect(() => {
+
+    // TODO: check here to make sure we have a valid email address
+    if (!email || email.length == 0) return  
+
+    axios.post("/api/status", {email: email}).then(status_result => {
+      setAuthResult(status_result.data.auth)
+      setDeployResult(status_result.data.deploy)
+  })
+  }, [email]);
 
   const handleCircuitSubmit = (event) => {
+
     axios.post("/api/deploy", {email: email}).then(deploy_result => {
       setDeployResult(deploy_result.data)
     })
@@ -37,16 +69,26 @@ export default function Home() {
       return;
     }
 
+    cookies.set('auth_email', email)
+
     recaptchaRef.current.reset();
+
+    setCircuitLoading(true)
 
     axios.post("/api/auth", {email: email, captchaCode: captchaCode}).then(auth_result => {
       setAuthResult(auth_result.data)
+      setCircuitLoading(false)
     })
   }
 
+  // TODO: move component
+  let [circuitLoading, setCircuitLoading] = React.useState(false);
+  let [color, setColor] = React.useState("#ffffff");
+
   const circuitInfo = () => {
     if (!authResult.circuit) {
-      return <div>Please log in with CAPTCHA</div>
+      return (<div><div>Please log in with CAPTCHA</div><BeatLoader color={color} loading={circuitLoading} /></div>
+      )
     }
       
     return  (
@@ -54,6 +96,19 @@ export default function Home() {
         <MetaMaskCard />
         <button onClick={handleCircuitSubmit}>Deploy</button>
       </div>
+      )
+  }
+
+  const contractInfo = () => {
+  
+    if (!deployResult.address) {
+      return <div>Deploy the contract</div>
+    }
+      
+    return  (
+      <div>
+      <BrowserReactJsonView src={deployResult} />
+    </div>
       )
   }
 
@@ -83,6 +138,7 @@ export default function Home() {
               required
               type="email"
               name="email"
+              value={email}
               placeholder="Email"
             />
             <button type="submit">Register</button>
@@ -97,7 +153,7 @@ export default function Home() {
 
           <div className="card">
             <h3>Login Contract Info &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
+            {contractInfo()}
           </div>
 
           <div className="card">

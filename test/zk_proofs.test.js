@@ -34,6 +34,12 @@ describe("zk proofs instance", function () {
         return await new ZKProof('auth', 'pete@timelight.com').deployContract()
     }, 30000)
 
+    test('gets contract status',  async () => {
+        const status = await new ZKProof('auth', 'pete@timelight.com').getStatus()
+        expect (status.circuit).to.not.eq(null)
+        expect (status.deploy.address).to.not.eq(null)
+    }, 30000)
+
     test('tests contract',  async () => {
         new ZKProof('auth', 'pete@timelight.com').callContract()
     }, 30000)

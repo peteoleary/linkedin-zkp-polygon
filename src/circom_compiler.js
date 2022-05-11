@@ -49,6 +49,11 @@ class CircomCompiler {
       this._name = name
   }
 
+  get_circuit() {
+    if (!fs.existsSync(this.get_circuit_file_name())) return null
+    return fs.readFileSync(this.get_circuit_file_name()).toString()
+  }
+
    async compile_circuit(overwrite = false)  {
       const cir_dir = this.get_circuit_directory()
 
@@ -67,7 +72,7 @@ class CircomCompiler {
       
       execute(`${circom_program} ${cir_dir}.circom --r1cs --wasm --sym -o ${cir_dir}`)
 
-      return fs.readFileSync(this.get_circuit_file_name()).toString()
+      return this.get_circuit()
     }
 
     async generate_witness(circuit_name) {

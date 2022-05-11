@@ -3,11 +3,12 @@ const hre = require("hardhat");
 const {ethers, deployments, getNamedAccounts} = hre;
 const fs = require('fs-extra');
 
+
 const deploy = async ( name, deployer = null ) => {
 
-  const network = await ethers.provider.getNetwork();
+  const network = await deployments.getNetworkName();
 
-  if (network.name == 'unknown') {
+  if (network.name == 'hardhat') {
       await deployments.fixture([name]);
   }
 

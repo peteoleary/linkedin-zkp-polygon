@@ -12,7 +12,7 @@ console.log(`hardhat.config.js`)
  * @type import('hardhat/config').HardhatUserConfig
  */
 
- const defaultNetwork = "hardhat";
+ const defaultNetwork = "localhost";
 
  const keyPath = "./keys/"
 

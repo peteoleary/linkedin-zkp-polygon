@@ -31,10 +31,22 @@ function groth16ExportSolidityCallData(proof, pub) {
 
 class ZKProof {
     constructor (base, name) {
+
+        if (!name || name.length == 0) throw "ZKProof name must not be empty"
+
         name = name.replace(/[\.\@]/g, '_').replace('__', '_')
         this._base = base
         this._name = name
         this._cc = new CircomCompiler(this.makeCircuitName())
+    }
+
+    async getStatus() {
+        return {
+            // TODO: same results as makeAll()
+            'auth': { 'circuit': this._cc.get_circuit()},
+            // TODO: same results as deployContract
+            'deploy': await this.contractInfo()
+        }
     }
 
     name() {
@@ -88,21 +100,30 @@ class ZKProof {
         return Promise.resolve(result)
     }
 
-    async callContract(proof, publicSignals) {
-
-        // TODO: pull all the hardhat specific code together from here, deploy.js and compile.js
+    async getContract() {
         const hre = require("hardhat");
         const {ethers, deployments, getNamedAccounts} = hre;
 
-        const network = await ethers.provider.getNetwork();
+        const network = await deployments.getNetworkName();
 
-        if (network.name == 'unknown') {
+        if (network.name == 'hardhat') {
             await deployments.fixture([this._cc.get_contract_name()]);
         }
 
         const {verifier, _} = await getNamedAccounts();
             
-        const loan_verifier = await ethers.getContract(this._cc.get_contract_name(), verifier);
+        return ethers.getContract(this._cc.get_contract_name(), verifier);
+    }
+
+    async contractInfo() {
+        const loan_verifier = await this.getContract()
+        return loan_verifier
+    }
+
+    async callContract(proof, publicSignals) {
+
+        // TODO: pull all the hardhat specific code together from here, deploy.js and compile.js
+        const loan_verifier = await this.getContract()
 
         // const { proof, publicSignals } = await snarkjs.groth16.fullProve({income: 300000, nonce: '0x1234567890abcdef'}, "./circuits/loan.wasm", "./circuits/loan.zkey")
         // from https://githubhot.com/repo/iden3/snarkjs/issues/112
