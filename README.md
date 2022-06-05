@@ -20,6 +20,8 @@ In this transaction the "beneficary" is the potential bad actor who could try to
 
 ## Setup
 
+TODO: explain what's happening here... setting up keys for the verifier and prover
+
 ```
 yarn install
 yarn circom:dev
@@ -68,6 +70,10 @@ Note in the steps below, we reference local files which are representative of th
 * https://medium.com/coinmonks/zk-poker-a-simple-zk-snark-circuit-8ec8d0c5ee52
 * https://github.com/enricobottazzi/ZKverse
 
+## Running the UI
+
+* Set up CAPTCHA
+
 ## TODO
 
 ~~* Add key files for verifier and prover~~
@@ -78,3 +84,4 @@ Note in the steps below, we reference local files which are representative of th
 * Translate step-by-step into Javascript code, test on localhost (fork SnarkJS as needed)
 * Investigate groth v. plonk, ptau file creation/use
 * Integrate with on-chain loan agreement
+* Write code to verify CAPTCHAs

@@ -43,9 +43,9 @@ class ZKProof {
     async getStatus() {
         return {
             // TODO: same results as makeAll()
-            'auth': { 'circuit': this._cc.get_circuit()},
+            'circuit': { 'circuit': this._cc.get_circuit()},
             // TODO: same results as deployContract
-            'deploy': await this.contractInfo()
+            'contract': await this.contractInfo()
         }
     }
 
@@ -101,17 +101,23 @@ class ZKProof {
     }
 
     async getContract() {
-        const hre = require("hardhat");
-        const {ethers, deployments, getNamedAccounts} = hre;
+        try {
+            const hre = require("hardhat");
+            const {ethers, deployments, getNamedAccounts} = hre;
 
-        const network = await deployments.getNetworkName();
+            const network = await deployments.getNetworkName();
 
-        if (network.name == 'hardhat') {
-            await deployments.fixture([this._cc.get_contract_name()]);
+            if (network.name == 'hardhat') {
+                await deployments.fixture([this._cc.get_contract_name()]);
+            }
+
+            const {verifier, _} = await getNamedAccounts();
+            return ethers.getContract(this._cc.get_contract_name(), verifier);
+        } catch (err) {
+            // return resolved value here or await will re-throw
+            return Promise.resolve({err: err})
         }
-
-        const {verifier, _} = await getNamedAccounts();
-        return ethers.getContract(this._cc.get_contract_name(), verifier);
+        
     }
 
     async contractInfo() {

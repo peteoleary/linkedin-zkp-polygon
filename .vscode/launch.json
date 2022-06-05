@@ -15,9 +15,9 @@
     },
     {
       "name": "Next.js: debug server-side",
-      "type": "node-terminal",
       "request": "launch",
-      "command": "yarn run dev"
+      "type": "node",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/next",
     },
         {
             "type": "node",

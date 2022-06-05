@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+// TODO: can we add this to package.json?
 import { hooks, network } from '../../../../../web3-react/packages/example-next/connectors/network'
 import { Accounts } from '../Accounts'
 import { Card } from '../Card'

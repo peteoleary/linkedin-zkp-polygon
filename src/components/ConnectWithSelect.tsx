@@ -63,7 +63,7 @@ export function ConnectWithSelect({
       if (desiredChainId === -1 && chainId !== undefined) return
 
       if (connector instanceof WalletConnect || connector instanceof Network) {
-        await connector.activate(desiredChainId === -1 ? undefined : desiredChainId)
+        connector.activate(desiredChainId === -1 ? undefined : desiredChainId)
       } else {
         await connector.activate(desiredChainId === -1 ? undefined : getAddChainParameters(desiredChainId))
       }

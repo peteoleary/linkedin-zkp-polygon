@@ -18,8 +18,8 @@ const BrowserReactJsonView = dynamic(() => import('react-json-view'), {
 
 export default function Home() {
   const [email, setEmail] = React.useState("");
-  const [authResult, setAuthResult] = React.useState({});
-  const [deployResult, setDeployResult] = React.useState({});
+  const [circuit, setCircuit] = React.useState({});
+  const [contract, setContract] = React.useState({});
   const recaptchaRef = React.createRef();
   
   const cookies = new Cookies();
@@ -37,15 +37,15 @@ export default function Home() {
     if (!email || email.length == 0) return  
 
     axios.post("/api/status", {email: email}).then(status_result => {
-      setAuthResult(status_result.data.auth)
-      setDeployResult(status_result.data.deploy)
+      setCircuit(status_result.data.circuit)
+      setContract(status_result.data.contract)
   })
   }, [email]);
 
   const handleCircuitSubmit = (event) => {
 
     axios.post("/api/deploy", {email: email}).then(deploy_result => {
-      setDeployResult(deploy_result.data)
+      setContract(deploy_result.data)
     })
     event.preventDefault();
   }
@@ -76,7 +76,7 @@ export default function Home() {
     setCircuitLoading(true)
 
     axios.post("/api/auth", {email: email, captchaCode: captchaCode}).then(auth_result => {
-      setAuthResult(auth_result.data)
+      setCircuit(auth_result.data)
       setCircuitLoading(false)
     })
   }
@@ -86,7 +86,7 @@ export default function Home() {
   let [color, setColor] = React.useState("#ffffff");
 
   const circuitInfo = () => {
-    if (!authResult.circuit) {
+    if (!circuit) {
       return (<div><div>Please log in with CAPTCHA</div><BeatLoader color={color} loading={circuitLoading} /></div>
       )
     }
@@ -94,6 +94,7 @@ export default function Home() {
     return  (
       <div>
         <MetaMaskCard />
+        <BrowserReactJsonView src={circuit} />
         <button onClick={handleCircuitSubmit}>Deploy</button>
       </div>
       )
@@ -101,13 +102,13 @@ export default function Home() {
 
   const contractInfo = () => {
   
-    if (!deployResult.address) {
+    if (!contract) {
       return <div>Deploy the contract</div>
     }
       
     return  (
       <div>
-      <BrowserReactJsonView src={deployResult} />
+      <BrowserReactJsonView src={contract} />
     </div>
       )
   }
